@@ -1,0 +1,84 @@
+name: Postman APOD onboarding
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: postman-apod-onboarding
+  cancel-in-progress: false
+
+jobs:
+  onboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: resolve_token
+        name: Resolve Postman service token
+        uses: postman-cs/postman-resolve-service-token-action@v2.2.6
+        with:
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+
+      - id: bootstrap
+        name: Bootstrap Postman assets
+        uses: postman-cs/postman-bootstrap-action@v2.22.0
+        with:
+          project-name: NASA Science APOD
+          domain: NASA Science
+          domain-code: NASA
+          spec-path: services/nasa-apod/openapi.yaml
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+          postman-access-token: ${{ steps.resolve_token.outputs.token }}
+          credential-preflight: enforce
+          branch-strategy: publish-gate
+          canonical-branch: main
+
+      - id: smoke_flow
+        name: Apply derived smoke flow
+        uses: postman-cs/postman-smoke-flow-action@v3.7.5
+        with:
+          project-name: NASA Science APOD
+          workspace-id: ${{ steps.bootstrap.outputs.workspace-id }}
+          spec-id: ${{ steps.bootstrap.outputs.spec-id }}
+          smoke-collection-id: ${{ steps.bootstrap.outputs.smoke-collection-id }}
+          spec-path: services/nasa-apod/openapi.yaml
+          flow-mode: auto
+          persist-derived-flow: true
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+          postman-access-token: ${{ steps.resolve_token.outputs.token }}
+          team-id: ${{ steps.resolve_token.outputs.team-id }}
+          branch-strategy: publish-gate
+          canonical-branch: main
+
+      - id: repo_sync
+        name: Sync generated Postman assets
+        uses: postman-cs/postman-repo-sync-action@v2.11.1
+        with:
+          project-name: NASA Science APOD
+          repo-url: https://github.com/${{ github.repository }}
+          workspace-id: ${{ steps.bootstrap.outputs.workspace-id }}
+          baseline-collection-id: ${{ steps.bootstrap.outputs.baseline-collection-id }}
+          smoke-collection-id: ${{ steps.smoke_flow.outputs.smoke-collection-id }}
+          contract-collection-id: ${{ steps.bootstrap.outputs.contract-collection-id }}
+          spec-id: ${{ steps.bootstrap.outputs.spec-id }}
+          spec-content-changed: ${{ steps.bootstrap.outputs.spec-content-changed }}
+          spec-path: services/nasa-apod/openapi.yaml
+          collection-sync-mode: refresh
+          spec-sync-mode: update
+          monitor-type: cli
+          generate-ci-workflow: 'true'
+          repo-write-mode: commit-only
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+          postman-access-token: ${{ steps.resolve_token.outputs.token }}
+          team-id: ${{ steps.resolve_token.outputs.team-id }}
+          credential-preflight: enforce
+          branch-strategy: publish-gate
+          canonical-branch: main
+          github-token: ${{ github.token }}

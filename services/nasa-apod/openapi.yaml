@@ -1,0 +1,275 @@
+openapi: 3.0.3
+info:
+  title: NASA Science APOD API
+  version: 1.0.0
+  description: |
+    Public API for NASA Science Astronomy Picture of the Day (APOD) records.
+    This describes the non-legacy NASA Science endpoint, not the transitional
+    api.nasa.gov passthrough. NASA does not publish an OpenAPI document for
+    this service; this contract is derived from its live route index, OPTIONS
+    declarations, and APOD service documentation as observed on 2026-09-24.
+  contact:
+    name: NASA Science
+    url: https://science.nasa.gov/apod/
+servers:
+  - url: https://science.nasa.gov/wp-json/wp/v2
+    description: Production
+paths:
+  /apod-basic:
+    get:
+      operationId: listApodEntries
+      summary: List APOD entries
+      description: Returns APOD entries in reverse chronological order.
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/DateFrom'
+        - $ref: '#/components/parameters/DateTo'
+        - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: A page of APOD entries.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/TotalEntries'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/TotalPages'
+            Link:
+              $ref: '#/components/headers/ApiRoot'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApodEntryList'
+        '400':
+          $ref: '#/components/responses/InvalidParameter'
+  /apod-basic/{date}:
+    get:
+      operationId: getApodEntry
+      summary: Get an APOD entry by date
+      parameters:
+        - $ref: '#/components/parameters/ApodDate'
+        - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: APOD entry for the requested date.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApodEntry'
+          headers:
+            Link:
+              $ref: '#/components/headers/ApiRoot'
+        '400':
+          $ref: '#/components/responses/InvalidParameter'
+  /apod-basic/{date}/html:
+    get:
+      operationId: getApodHtml
+      summary: Get the APOD entry's plain HTML source
+      parameters:
+        - $ref: '#/components/parameters/ApodDate'
+      responses:
+        '200':
+          description: Plain HTML source for the requested APOD entry.
+          headers:
+            Link:
+              $ref: '#/components/headers/ApiRoot'
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApodHtml'
+        '400':
+          $ref: '#/components/responses/InvalidParameter'
+  /feed/apod-basic:
+    get:
+      operationId: getApodRssFeed
+      summary: Get the APOD RSS feed
+      description: Returns the APOD Basic RSS 2.0 feed.
+      servers:
+        - url: https://science.nasa.gov
+          description: Production feed origin
+      responses:
+        '200':
+          description: APOD Basic RSS feed.
+          content:
+            application/rss+xml:
+              schema:
+                $ref: '#/components/schemas/ApodRssFeed'
+components:
+  parameters:
+    ApodDate:
+      name: date
+      in: path
+      required: true
+      description: APOD date in YYMMDD format, for example 141001.
+      schema:
+        type: string
+        pattern: '^[0-9]{6}$'
+        example: '141001'
+    Page:
+      name: page
+      in: query
+      description: One-based result page number.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum entries returned per page.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 25
+        default: 25
+      example: 25
+    DateFrom:
+      name: date_from
+      in: query
+      description: Inclusive lower APOD date bound in YYMMDD format.
+      schema:
+        type: string
+        pattern: '^[0-9]{6}$'
+        example: '141001'
+    DateTo:
+      name: date_to
+      in: query
+      description: Inclusive upper APOD date bound in YYMMDD format.
+      schema:
+        type: string
+        pattern: '^[0-9]{6}$'
+        example: '141002'
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated response fields to return.
+      schema:
+        type: string
+      example: date,title,url
+  headers:
+    TotalEntries:
+      description: Total number of APOD entries matching the filters.
+      schema:
+        type: integer
+        minimum: 0
+    TotalPages:
+      description: Total number of result pages for the requested page size.
+      schema:
+        type: integer
+        minimum: 0
+    ApiRoot:
+      description: Link to the NASA Science WordPress REST API root.
+      schema:
+        type: string
+        format: uri
+  responses:
+    InvalidParameter:
+      description: One or more supplied route or query parameters are invalid.
+      headers:
+        Link:
+          $ref: '#/components/headers/ApiRoot'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): date_from'
+            data:
+              status: 400
+              params:
+                date_from: Invalid parameter.
+              details: []
+  schemas:
+    ApodEntryList:
+      type: array
+      description: A page of APOD entries in reverse chronological order.
+      items:
+        $ref: '#/components/schemas/ApodEntry'
+    ApodHtml:
+      type: string
+      description: APOD HTML source returned as text/plain.
+    ApodRssFeed:
+      type: string
+      description: APOD Basic RSS 2.0 XML document.
+    ApodEntry:
+      type: object
+      description: An Astronomy Picture of the Day record.
+      properties:
+        alt:
+          type: string
+          description: Alternative text for the featured media.
+        basic_html:
+          type: string
+          description: APOD HTML source serialized as a JSON string.
+        basic_html_url:
+          type: string
+          format: uri
+          description: URL for the plain HTML source.
+        copyright:
+          type: string
+          description: Copyright attribution when provided by the entry.
+        credit:
+          type: string
+          description: Media credit attribution.
+        date:
+          type: string
+          format: date
+          description: APOD publication date.
+        explanation:
+          type: string
+          description: APOD explanatory text, which may contain HTML.
+        hdurl:
+          type: string
+          format: uri
+          description: Full-size featured-media URL when available.
+        media_type:
+          type: string
+          description: Normalized media type, such as image, video, or iframe.
+        permalink:
+          type: string
+          format: uri
+          description: Canonical NASA Science APOD article URL.
+        post_id:
+          type: integer
+          description: WordPress post identifier.
+        title:
+          type: string
+          description: APOD entry title.
+        url:
+          type: string
+          format: uri
+          description: APOD article URL.
+      additionalProperties: true
+    Error:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: string
+          description: WordPress REST API error code.
+        message:
+          type: string
+          description: Human-readable error summary.
+        data:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: Per-parameter validation errors when present.
+            details:
+              type: array
+              description: Additional validation details when present.
+              items: {}
+          additionalProperties: true
+      additionalProperties: true
