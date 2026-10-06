@@ -1,0 +1,26 @@
+workflows:
+  syncSpecToCollection:
+    - spec: ../services/nasa-apod/openapi.yaml
+      collection: ../postman/collections/NASA Science APOD
+      options:
+        parametersResolution: Example
+        requestNameSource: Fallback
+        folderStrategy: Paths
+      syncOptions:
+        syncExamples: true
+    - spec: ../services/nasa-apod/openapi.yaml
+      collection: ../postman/collections/[Smoke] NASA Science APOD
+      options:
+        parametersResolution: Example
+        requestNameSource: Fallback
+        folderStrategy: Paths
+      syncOptions:
+        syncExamples: true
+    - spec: ../services/nasa-apod/openapi.yaml
+      collection: ../postman/collections/[Contract] NASA Science APOD
+      options:
+        parametersResolution: Example
+        requestNameSource: Fallback
+        folderStrategy: Paths
+      syncOptions:
+        syncExamples: true

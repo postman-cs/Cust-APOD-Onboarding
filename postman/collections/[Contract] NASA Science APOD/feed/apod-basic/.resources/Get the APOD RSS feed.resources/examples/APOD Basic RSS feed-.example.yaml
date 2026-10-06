@@ -1,0 +1,23 @@
+$kind: http-example
+id: 570b1744-f761-40de-a399-32b782d4ec16
+name: APOD Basic RSS feed.
+request:
+  url: https://science.nasa.gov/feed/apod-basic
+  method: GET
+  headers:
+    Accept: application/rss+xml
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/rss+xml
+  body:
+    type: xml
+    content: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <rss>
+      </rss>
+order: 1000

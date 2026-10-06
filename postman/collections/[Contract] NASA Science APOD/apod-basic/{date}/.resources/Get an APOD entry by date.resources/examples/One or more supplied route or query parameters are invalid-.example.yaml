@@ -1,0 +1,40 @@
+$kind: http-example
+id: dfe27102-61d7-42e3-8ff6-821a6b9a59be
+name: One or more supplied route or query parameters are invalid.
+request:
+  url: "{{baseUrl}}/apod-basic/:date?_fields=date,title,url"
+  method: GET
+  headers:
+    Accept: application/json
+  queryParams:
+    - key: _fields
+      value: date,title,url
+      description: Comma-separated response fields to return.
+  pathVariables:
+    - key: date
+      value: "141001"
+      description: APOD date in YYMMDD format, for example 141001.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+    Link: https://a.co
+  body:
+    type: json
+    content: |-
+      {
+        "code": "rest_invalid_param",
+        "message": "Invalid parameter(s): date_from",
+        "data": {
+          "status": 400,
+          "params": {
+            "date_from": "Invalid parameter."
+          },
+          "details": []
+        }
+      }
+order: 2000

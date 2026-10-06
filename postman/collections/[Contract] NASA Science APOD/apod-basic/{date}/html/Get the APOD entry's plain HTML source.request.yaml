@@ -1,0 +1,15 @@
+$kind: http-request
+id: 101e72d6-4a93-4885-90fe-4a63faa39184
+url: "{{baseUrl}}/apod-basic/:date/html"
+method: GET
+headers:
+  Accept: text/plain
+pathVariables:
+  - key: date
+    value: "141001"
+    description: APOD date in YYMMDD format, for example 141001.
+body:
+  type: text
+  content: ""
+examples: ./.resources/Get the APOD entry's plain HTML source.resources/examples
+order: 1000

@@ -1,0 +1,12 @@
+flows:
+  - name: NASA Science APOD API derived smoke flow
+    type: smoke
+    steps:
+      - stepKey: list-apod-entries-1
+        operationId: listApodEntries
+        bindings: []
+        extract: []
+      - stepKey: get-apod-rss-feed-3
+        operationId: getApodRssFeed
+        bindings: []
+        extract: []

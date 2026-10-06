@@ -1,0 +1,28 @@
+$kind: http-request
+id: 0d9f42e2-49f1-46ed-868a-e36ba821b794
+description: Returns APOD entries in reverse chronological order.
+url: "{{baseUrl}}/apod-basic?page=1&per_page=25&date_from=141001&date_to=141002&_fields=date,title,url"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: page
+    value: "1"
+    description: One-based result page number.
+  - key: per_page
+    value: "25"
+    description: Maximum entries returned per page.
+  - key: date_from
+    value: "141001"
+    description: Inclusive lower APOD date bound in YYMMDD format.
+  - key: date_to
+    value: "141002"
+    description: Inclusive upper APOD date bound in YYMMDD format.
+  - key: _fields
+    value: date,title,url
+    description: Comma-separated response fields to return.
+body:
+  type: text
+  content: ""
+examples: ./.resources/List APOD entries.resources/examples
+order: 2000

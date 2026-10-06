@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "collections": [
+    {
+      "role": "baseline",
+      "collectionPath": "postman/collections/NASA Science APOD",
+      "cloudId": "58347765-6081c4dd-220f-55be-a03c-bb01e251a186",
+      "payloadDigest": "22ed73f78740f6ec546aedb4ca94d7d9c2c2fcaaa36a549d67e193cbad04cef5",
+      "artifactDigest": "d12a75543eb3eb677e34e2ee4e30cac7f60c95d9be79fe3279a2e4231d09ee5b"
+    },
+    {
+      "role": "smoke",
+      "collectionPath": "postman/collections/[Smoke] NASA Science APOD",
+      "cloudId": "58347765-2ecd07bb-d689-59a2-8dd4-3f4e118ed937",
+      "payloadDigest": "8e685adef7d9229cbca391b6efa8221715598cd26b175ef34b737b6bddb5bfb9",
+      "artifactDigest": "507d70bff8c7a52fddaf7b6ef506176a1baab4df8e7ebb7130e413bf1298bf4c"
+    },
+    {
+      "role": "contract",
+      "collectionPath": "postman/collections/[Contract] NASA Science APOD",
+      "cloudId": "58347765-00ff76be-aee0-5b7f-a944-46fb901b241d",
+      "payloadDigest": "ad1575fb38941e5eecc7570b25ce5fc592a1366b01c8c34e6a9028511df19f1e",
+      "artifactDigest": "b9559d9d6495cb8cc749537842113dca32d8e4952e14671a5b8bfb93742c0f14"
+    }
+  ]
+}
