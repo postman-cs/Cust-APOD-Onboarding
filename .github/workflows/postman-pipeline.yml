@@ -75,6 +75,7 @@ jobs:
           spec-sync-mode: update
           monitor-type: cli
           generate-ci-workflow: 'true'
+          ci-workflow-path: .postman/generated-ci.yml
           repo-write-mode: commit-only
           postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
           postman-access-token: ${{ steps.resolve_token.outputs.token }}
@@ -87,13 +88,12 @@ jobs:
       - name: Publish generated assets pull request
         if: steps.repo_sync.outputs.commit-sha != ''
         env:
-          GH_TOKEN: ${{ secrets.POSTMAN_REPO_PUBLISH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           GENERATED_BRANCH: postman/generated-main
           GENERATED_COMMIT: ${{ steps.repo_sync.outputs.commit-sha }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          : "${GH_TOKEN:?POSTMAN_REPO_PUBLISH_TOKEN is required}"
           ORIGINAL_ORIGIN="$(git remote get-url origin)"
           trap 'git remote set-url origin "$ORIGINAL_ORIGIN"' EXIT
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.git"
