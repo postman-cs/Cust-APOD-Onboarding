@@ -190,8 +190,11 @@ components:
       type: string
       description: APOD HTML source returned as text/plain.
     ApodRssFeed:
-      type: string
+      type: object
       description: APOD Basic RSS 2.0 XML document.
+      xml:
+        name: rss
+      additionalProperties: true
     ApodEntry:
       type: object
       description: An Astronomy Picture of the Day record.
