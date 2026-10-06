@@ -74,7 +74,7 @@ jobs:
           spec-sync-mode: update
           monitor-type: cli
           generate-ci-workflow: 'true'
-          repo-write-mode: commit-only
+          repo-write-mode: commit-and-push
           postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
           postman-access-token: ${{ steps.resolve_token.outputs.token }}
           team-id: ${{ steps.resolve_token.outputs.team-id }}
