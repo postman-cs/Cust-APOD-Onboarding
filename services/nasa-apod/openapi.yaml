@@ -12,10 +12,10 @@ info:
     name: NASA Science
     url: https://science.nasa.gov/apod/
 servers:
-  - url: https://science.nasa.gov/wp-json/wp/v2
+  - url: https://science.nasa.gov
     description: Production
 paths:
-  /apod-basic:
+  /wp-json/wp/v2/apod-basic:
     get:
       operationId: listApodEntries
       summary: List APOD entries
@@ -42,7 +42,7 @@ paths:
                 $ref: '#/components/schemas/ApodEntryList'
         '400':
           $ref: '#/components/responses/InvalidParameter'
-  /apod-basic/{date}:
+  /wp-json/wp/v2/apod-basic/{date}:
     get:
       operationId: getApodEntry
       summary: Get an APOD entry by date
@@ -61,7 +61,7 @@ paths:
               $ref: '#/components/headers/ApiRoot'
         '400':
           $ref: '#/components/responses/InvalidParameter'
-  /apod-basic/{date}/html:
+  /wp-json/wp/v2/apod-basic/{date}/html:
     get:
       operationId: getApodHtml
       summary: Get the APOD entry's plain HTML source
@@ -84,9 +84,6 @@ paths:
       operationId: getApodRssFeed
       summary: Get the APOD RSS feed
       description: Returns the APOD Basic RSS 2.0 feed.
-      servers:
-        - url: https://science.nasa.gov
-          description: Production feed origin
       responses:
         '200':
           description: APOD Basic RSS feed.
