@@ -1,0 +1,71 @@
+$kind: http-example
+id: a7453acf-fdd2-443f-960b-8c35320440ad
+name: A page of APOD entries.
+request:
+  url: "{{baseUrl}}/apod-basic?page=1&per_page=25&date_from=141001&date_to=141002&_fields=date,title,url"
+  method: GET
+  headers:
+    Accept: application/json
+  queryParams:
+    - key: page
+      value: "1"
+      description: One-based result page number.
+    - key: per_page
+      value: "25"
+      description: Maximum entries returned per page.
+    - key: date_from
+      value: "141001"
+      description: Inclusive lower APOD date bound in YYMMDD format.
+    - key: date_to
+      value: "141002"
+      description: Inclusive upper APOD date bound in YYMMDD format.
+    - key: _fields
+      value: date,title,url
+      description: Comma-separated response fields to return.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+    X-WP-Total: "0"
+    X-WP-TotalPages: "0"
+    Link: https://a.co
+  body:
+    type: json
+    content: |-
+      [
+        {
+          "alt": "string",
+          "basic_html": "string",
+          "basic_html_url": "http://xUEBxQUeCQtFbUyAxLfZtEwRNGPHE.fzvckeX5E.9gwNu0JJhU01qsp,4iZF.O8pZc,-wIQaYzIlbKfPkcA333mZJHmuHHFoit0aag",
+          "copyright": "string",
+          "credit": "string",
+          "date": "1993-02-02",
+          "explanation": "string",
+          "hdurl": "http://QF.psaafm0fQeTNiJiHC.Td4z.7CQTww,5u-QFODTRpejxbA5ejWoQ3HL94CYO0SEzBJzS5g.vv4",
+          "media_type": "string",
+          "permalink": "http://XceSizjnUTYRcput.skWFh7CvtorHMAxXdtshUpP5G46sd3qt+mRobd6IhtM52tS,YRv2Ie697Musn-toDT5l.HRpmR",
+          "post_id": 6573,
+          "title": "string",
+          "url": "https://hnPmfRdKNLXnGJFnxvWkqUXSAYpVtGoln.okaDw1JWR7JEEYZ4EPqdLM6D7Kf06MoXYOW40M7QvWh3NJ7LueoTUQL8,Ml+wQxJhDasq+qKqA542As+JW9h9LH0"
+        },
+        {
+          "alt": "string",
+          "basic_html": "string",
+          "basic_html_url": "http://xyCKXekZEFQMeUVtkqRWAwePVUSnJXT.tmfcQ60aT4zeBjJ9aR0KWP",
+          "copyright": "string",
+          "credit": "string",
+          "date": "2005-08-16",
+          "explanation": "string",
+          "hdurl": "http://PG.ihILwIW,aaSSyvhF2TqrtabQZShRJZCm-Jco6aZ5DQ,BSz",
+          "media_type": "string",
+          "permalink": "https://aiJ.ysaEQaBigQtsMyJLn5quEDj-zpmsFd5q14QM6HDfycGqotFogjTZfitpulQ",
+          "post_id": 929,
+          "title": "string",
+          "url": "http://yEJ.fhtuTa7BFH9tavJEZbvrErv+M87CnXd-9wdcKVzQGZxU3TKRoMS-JXqM4FCmnv"
+        }
+      ]
+order: 1000

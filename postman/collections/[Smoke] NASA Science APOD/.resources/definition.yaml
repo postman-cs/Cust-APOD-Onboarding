@@ -1,0 +1,34 @@
+$kind: collection
+id: 2ecd07bb-d689-59a2-8dd4-3f4e118ed937
+description: |-
+  Public API for NASA Science Astronomy Picture of the Day (APOD) records.
+  This describes the non-legacy NASA Science endpoint, not the transitional
+  api.nasa.gov passthrough. NASA does not publish an OpenAPI document for
+  this service; this contract is derived from its live route index, OPTIONS
+  declarations, and APOD service documentation as observed on 2026-09-24.
+
+
+  Contact Support:
+   Name: NASA Science
+  x-pm-onboarding-content-receipt: {"schemaVersion":1,"algorithm":"sha256","digest":"8e685adef7d9229cbca391b6efa8221715598cd26b175ef34b737b6bddb5bfb9"}
+variables:
+  baseUrl: https://science.nasa.gov/wp-json/wp/v2
+scripts:
+  - type: http:beforeRequest
+    code: |-
+      // postman-enterprise-automation: private-mock-auth-root
+      var privateMockApiKey = pm.variables.get('postmanPrivateMockApiKey');
+      var privateMockHost = '';
+      try {
+        var privateMockUrl = pm.variables.replaceIn(pm.request.url.toString());
+        privateMockHost = new URL(privateMockUrl).hostname;
+      } catch (error) {
+        console.warn('Could not resolve the request URL for private mock authentication; x-api-key was not added.');
+      }
+      var isPrivateMockHost = /(^|\.)mock\.pstmn\.io$/i.test(privateMockHost);
+      if (isPrivateMockHost && privateMockApiKey) {
+        pm.request.headers.upsert({ key: 'x-api-key', value: privateMockApiKey });
+      } else if (isPrivateMockHost) {
+        console.warn('This mock server is private. Set the postmanPrivateMockApiKey variable to a Postman API key with access to it, or the request returns 401.');
+      }
+    language: text/javascript

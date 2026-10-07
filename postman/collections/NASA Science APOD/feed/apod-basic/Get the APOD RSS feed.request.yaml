@@ -1,0 +1,12 @@
+$kind: http-request
+id: ee9a2117-5bf4-4d7d-9897-3464e6cbecd7
+description: Returns the APOD Basic RSS 2.0 feed.
+url: https://science.nasa.gov/feed/apod-basic
+method: GET
+headers:
+  Accept: application/rss+xml
+body:
+  type: text
+  content: ""
+examples: ./.resources/Get the APOD RSS feed.resources/examples
+order: 1000

@@ -1,0 +1,12 @@
+version: 2
+workspace:
+  id: 1707f60c-e080-4213-9fa2-d11c19bd3b01
+canonical:
+  collections:
+    ../postman/collections/NASA Science APOD: 58347765-6081c4dd-220f-55be-a03c-bb01e251a186
+    ../postman/collections/[Smoke] NASA Science APOD: 58347765-2ecd07bb-d689-59a2-8dd4-3f4e118ed937
+    ../postman/collections/[Contract] NASA Science APOD: 58347765-00ff76be-aee0-5b7f-a944-46fb901b241d
+  environments:
+    ../postman/environments/prod.postman_environment.json: 58347765-ea1e5dee-bc95-4e60-8dde-7cb737a9ff3f
+  specs:
+    ../services/nasa-apod/openapi.yaml: 83ce6bd7-96a6-430b-ad15-b7330384e93c

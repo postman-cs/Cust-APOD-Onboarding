@@ -1,0 +1,45 @@
+$kind: http-example
+id: 7ff9c3af-bdfe-4d3c-a0d5-8ce1c1934e19
+name: APOD entry for the requested date.
+request:
+  url: "{{baseUrl}}/apod-basic/:date?_fields=date,title,url"
+  method: GET
+  headers:
+    Accept: application/json
+  queryParams:
+    - key: _fields
+      value: date,title,url
+      description: Comma-separated response fields to return.
+  pathVariables:
+    - key: date
+      value: "141001"
+      description: APOD date in YYMMDD format, for example 141001.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+    Link: https://a.co
+  body:
+    type: json
+    content: |-
+      {
+        "alt": "string",
+        "basic_html": "string",
+        "basic_html_url": "https://sPXdaJoxMFXMmxBjpGi.rhOoNLXRj8MmvD6TsNpH6NP7S1v54IQjG1qbILebjRvurQMsfkZGD",
+        "copyright": "string",
+        "credit": "string",
+        "date": "2024-11-07",
+        "explanation": "string",
+        "hdurl": "https://uyYnxQ.bpnY9QF1cktrorFRfDDezQ57bQd8j5+IUIQ+4dkJGAWF7",
+        "media_type": "string",
+        "permalink": "http://hPheofeJOJKrPlpeisekKRIXpMEoaHZn.xjuV1ATltvrgRfJFP9D6",
+        "post_id": 7166,
+        "title": "string",
+        "url": "http://mnI.igpx8BATQBI71+UAc5qVuJEbwwq4RQbd01ek6dAJDKw66eSM9kZ0eEg03mt066-v5-Nzp5YtcxWkkIKzVP.Bxzn8Z8hqT",
+        "key_0": 9665
+      }
+order: 1000
