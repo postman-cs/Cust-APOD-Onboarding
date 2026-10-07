@@ -66,6 +66,14 @@ jobs:
         shell: bash
         run: postman spec lint services/nasa-apod/openapi.yaml --workspace-id "$POSTMAN_WORKSPACE_ID"
 
+      - name: Show selected environment base URL
+        shell: bash
+        run: |
+          curl -fsSL \
+            -H "X-Api-Key: $POSTMAN_API_KEY" \
+            "https://api.postman.com/environments/$POSTMAN_ENVIRONMENT_UID" |
+            jq -r '.environment.values[] | select(.key == "baseUrl") | .value'
+
       - name: Run generated Smoke collection against the mock
         shell: bash
         run: |
