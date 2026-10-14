@@ -1,0 +1,37 @@
+# Postman CLI building blocks for the collection-run jobs.
+# One image: node:22-bookworm has curl + node, which is all we need (no jq/yq/Ruby).
+
+.postman-cli-setup:
+  image: node:22-bookworm
+  before_script:
+    # Install the Postman CLI and authenticate with the masked POSTMAN_API_KEY.
+    - curl -fsSL https://dl-cli.pstmn.io/install/unix.sh | sh
+    - postman login --with-api-key "$POSTMAN_API_KEY"
+
+# Finds the collections to run and the mock environment in the workspace, shares
+# the IDs as a dotenv artifact and generates the child pipeline that runs them.
+.postman-resolve-workspace:
+  image: node:22-bookworm
+  script:
+    - node .gitlab/postman/resolve-resources.mjs postman-ids.env collection-runs.gitlab-ci.yml
+  artifacts:
+    reports:
+      dotenv: postman-ids.env
+    paths: [collection-runs.gitlab-ci.yml]
+
+# Runs one collection (POSTMAN_COLLECTION_UID) in the mock environment. Used by the
+# generated child pipeline, one job per collection.
+.postman-run-collection:
+  extends: .postman-cli-setup
+  script:
+    - |
+      echo "Collection: ${POSTMAN_COLLECTION_NAME:-$POSTMAN_COLLECTION_UID}"
+      # Mocks often fail their first request and the CLI has no retry option,
+      # so warm the mock up with a few retried requests (failures are ignored).
+      curl -sS -o /dev/null --retry 5 --retry-all-errors --retry-delay 3 \
+        -H "x-api-key: $POSTMAN_API_KEY" "$POSTMAN_BASE_URL/apod-basic" || true
+      ARGS=(collection run "$POSTMAN_COLLECTION_UID" --environment "$POSTMAN_ENVIRONMENT_UID"
+            --env-var "RESPONSE_TIME_THRESHOLD=$POSTMAN_RESPONSE_TIME_THRESHOLD"
+            # Private mocks need the same API key.
+            --env-var "postmanPrivateMockApiKey=$POSTMAN_API_KEY" --report-events)
+      postman "${ARGS[@]}"
