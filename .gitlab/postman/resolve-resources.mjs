@@ -37,7 +37,9 @@ for (const e of workspace.environments ?? []) {
   const baseUrl = (environment.values ?? []).find((v) => v.key === "baseUrl")?.value ?? "";
   envs.push({ uid: e.uid, name: e.name, baseUrl });
 }
-const isMock = (e) => /\.mock\.pstmn\.io/.test(e.baseUrl);
+// Only send the API key to an HTTPS Postman mock origin, including explicit selections.
+const isMock = (e) => typeof e.baseUrl === "string" && !/\s/.test(e.baseUrl) &&
+  /^https:\/\/[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.mock\.pstmn\.io\/?$/i.test(e.baseUrl);
 const candidates = POSTMAN_ENVIRONMENT_ID ? envs.filter((e) => e.uid === POSTMAN_ENVIRONMENT_ID || e.uid.endsWith(POSTMAN_ENVIRONMENT_ID)) : envs.filter(isMock);
 if (candidates.length !== 1) {
   console.error(`ERROR: expected exactly 1 ${POSTMAN_ENVIRONMENT_ID ? "matching" : "mock"} environment, found ${candidates.length}. Environments in workspace ${POSTMAN_WORKSPACE_ID}:`);
@@ -46,7 +48,7 @@ if (candidates.length !== 1) {
   process.exit(1);
 }
 const env = candidates[0];
-if (!env.baseUrl) fail(`environment ${env.uid} ("${env.name}") has an empty baseUrl`);
+if (!isMock(env)) fail(`environment ${env.uid} must have an HTTPS Postman mock baseUrl (https://<id>.mock.pstmn.io)`);
 console.log(`Environment: ${env.name} (${env.uid}) baseUrl=${env.baseUrl}`);
 
 // Dotenv for later jobs (IDs only, no secrets).
@@ -64,6 +66,8 @@ const slugs = new Set();
 const jobs = collections.map((c) => {
   let slug = c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "collection";
   if (slugs.has(slug)) slug += `-${c.uid.slice(-8)}`;
+  const base = slug;
+  for (let suffix = 2; slugs.has(slug); suffix++) slug = `${base}-${suffix}`;
   slugs.add(slug);
   const q = JSON.stringify;
   return [
